@@ -4,6 +4,12 @@
 
 By exposing agents to calculated stressors—such as flaky endpoints (HTTP 429 rate-limiting, 500 server crashes), lying tools, high-latency scraper delay, contradictory sources, and circular redirection loops—Tanglefoot uncovers the architectural limits of popular frameworks like **LangGraph, CrewAI, Microsoft AutoGen, and LlamaIndex Workflows**.
 
+## 🎥 Dashboard Replay & Interactive Preview
+Below is a high-fidelity visual preview of the Tanglefoot interactive trace scroller, ticking token-cost telemetry, and dark/light system interface:
+
+![Tanglefoot Interactive Dashboard Demo](dashboard/src/assets/tanglefoot_demo.webp)
+
+
 ---
 
 ## 🏗️ Repository Architecture
