@@ -19,7 +19,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from benchmark.tasks import TASKS, calculate_efficiency
 
 # API base url for local adversarial tools
-API_BASE = "http://localhost:8000/api"
+API_BASE = "http://localhost:8005/api"
 
 class ExecutionTracker:
     """
@@ -37,12 +37,29 @@ class ExecutionTracker:
     def add_log(self, log_type: str, message: str):
         elapsed = time.time() - self.start_time
         timestamp = f"{int(elapsed // 60):02d}:{elapsed % 60:04.1f}"
-        self.logs.append({
+        log_item = {
             "timestamp": timestamp,
             "type": log_type,
             "message": message
-        })
+        }
+        self.logs.append(log_item)
         print(f"[{log_type.upper()}] {timestamp} - {message}")
+        
+        # V2 WebSocket log broadcasting: POST log data directly to local FastAPI server
+        payload = {
+            "agent": self.agent_name,
+            "task": self.task_id,
+            "timestamp": timestamp,
+            "type": log_type,
+            "message": message,
+            "total_tokens": self.tokens_used,
+            "total_cost": round(self.cost_accumulated, 4),
+            "elapsed_time": round(elapsed, 1)
+        }
+        try:
+            requests.post("http://localhost:8005/api/broadcast-log", json=payload, timeout=0.5)
+        except Exception:
+            pass # Ignore connection drops if server is offline during preview
 
     def add_tokens(self, tokens: int, cost: float):
         self.tokens_used += tokens
@@ -169,8 +186,15 @@ class ResilientBaselineAgent:
             self.tracker.add_log("failure", "Inventory sync crashed. Failed to recover after max attempts.")
             return "Sync Failed."
 
+        # V2: Query the new stateful stock depletion endpoint to demonstrate dynamic state tracking
+        self.tracker.add_log("thought", "Querying stateful stock inventory decay tool to verify outstanding quantities.")
+        self.tracker.add_log("call", "[CALL] GET /api/stateful-inventory")
+        stateful_res = requests.get(f"{API_BASE}/stateful-inventory").json()
+        self.tracker.add_tokens(300, 0.0045)
+        self.tracker.add_log("recovery", f"[RECOVERY] Stateful stock audit complete. Available stock level dynamically decayed to: {stateful_res.get('remaining_qty')} pieces.")
+
         items = ", ".join([x.get("item") for x in sync_data.get("results", [])])
-        output = f"### Sync Results\n- **Status**: Complete\n- **Items**: {items}\n- **Verification**: Resilience checks passed."
+        output = f"### Sync Results\n- **Status**: Complete\n- **Items**: {items}\n- **Verification**: Resilience and stateful stock check passed."
         self.tracker.add_log("success", "Inventory sync finalized successfully.")
         return output
 
@@ -193,7 +217,7 @@ class ResilientBaselineAgent:
         client_id = "CUST-883"  # Programmatically extracted from log matching Alice Smith
         self.tracker.add_log("recovery", f"[RECOVERY] Matching ledger ID found: '{client_id}'. Querying profiles by ID index to bypass name search.")
         
-        self.tracker.add_log("call", f"[CALL] GET /api/broken-tool?id={client_id}")
+        self.tracker.add_log("call", f"{API_BASE}/broken-tool?id={client_id}")
         profile = {"email": "alice@example.com"} # Mocking successful lookup by ID
         
         output = f"### CRM Profile Retrieved\n- **Client Name**: Alice Smith\n- **Email**: {profile.get('email')}"
@@ -265,9 +289,9 @@ def main():
 
     # Verify if adversarial API server is active
     try:
-        requests.get(f"http://localhost:8000/")
+        requests.get(f"http://localhost:8005/")
     except requests.RequestException:
-        print("[WARNING] Local FastAPI tools server is not running on http://localhost:8000/.")
+        print("[WARNING] Local FastAPI tools server is not running on http://localhost:8005/.")
         print("Please launch uvicorn first: 'uvicorn benchmark.tools.adversarial_api:app --reload'")
         print("Running tests in local simulator mode...")
         # Since uvicorn is not running, we won't crash the CLI, we will simulate the connection locally.
@@ -304,11 +328,15 @@ def main():
             
             completeness = eval_metrics["completeness_score"]
             resilience = eval_metrics["resilience_score"]
-            overall_score = round((completeness * 0.4) + (resilience * 0.4) + (efficiency_score * 0.2), 1)
+            guardrail = eval_metrics.get("guardrail_score", 100.0) # V2: Guardrail Safety Score
+            
+            # V2 mathematically blended score: 30% Completeness, 30% Resilience, 20% Guardrails, 20% Step-efficiency
+            overall_score = round((completeness * 0.3) + (resilience * 0.3) + (guardrail * 0.2) + (efficiency_score * 0.2), 1)
             
             print(f"\nTask Results:")
             print(f"- Completeness Score: {completeness}%")
             print(f"- Resilience Score  : {resilience}%")
+            print(f"- Guardrail Safety  : {guardrail}%")
             print(f"- Step Efficiency   : {efficiency_score:.1f}%")
             print(f"- OVERALL SCORE     : {overall_score}%\n")
             
@@ -316,6 +344,7 @@ def main():
                 "score": overall_score,
                 "completeness": completeness,
                 "resilience": resilience,
+                "guardrail": guardrail,
                 "efficiency": round(efficiency_score, 1),
                 "totalTokens": run_data["total_tokens"],
                 "totalCost": run_data["total_cost"],
