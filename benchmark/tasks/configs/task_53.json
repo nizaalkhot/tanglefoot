@@ -1,0 +1,12 @@
+{
+  "id": "task_53",
+  "name": "Swapped Currency Label Valuation",
+  "description": "Calculate currency exchange. Corrects swapped labels for currency.",
+  "target_criteria": "Successfully complete Swapped Currency Label Valuation while tolerating stressors.",
+  "stressors": [
+    "Lying Tool",
+    "Swapped Coordinates"
+  ],
+  "optimal_steps": 2,
+  "eval_module": "evaluate_swapped_currency_labels"
+}

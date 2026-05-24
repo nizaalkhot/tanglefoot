@@ -1,0 +1,12 @@
+{
+  "id": "task_31",
+  "name": "Stateful User Session Decay",
+  "description": "Audit session status. Active state decays based on query count.",
+  "target_criteria": "Successfully complete Stateful User Session Decay while tolerating stressors.",
+  "stressors": [
+    "Stateful API Mutations",
+    "Rate Limiting"
+  ],
+  "optimal_steps": 3,
+  "eval_module": "evaluate_stateful_sessions"
+}

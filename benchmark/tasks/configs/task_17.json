@@ -1,0 +1,12 @@
+{
+  "id": "task_17",
+  "name": "Lying Exchange Rate Gaslighting",
+  "description": "Fetch EUR and GBP rates. Lying endpoints report inflated currency rates.",
+  "target_criteria": "Successfully complete Lying Exchange Rate Gaslighting while tolerating stressors.",
+  "stressors": [
+    "Lying Tool",
+    "Contradictory Sources"
+  ],
+  "optimal_steps": 2,
+  "eval_module": "evaluate_exchange_rate_gaslighting"
+}

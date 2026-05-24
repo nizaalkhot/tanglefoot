@@ -1,0 +1,13 @@
+{
+  "id": "task_12",
+  "name": "Flaky Payment Ledger",
+  "description": "Reconcile outstanding customer payments. The payments endpoint rate-limits, crashes, and returns empty logs.",
+  "target_criteria": "Apply backoff and retries to tolerate flakiness, pull active payments ledger, and reconcile invoice status.",
+  "stressors": [
+    "API Rate Limiting",
+    "API Crashes",
+    "Omission"
+  ],
+  "optimal_steps": 4,
+  "eval_module": "evaluate_flaky_payment_ledger"
+}

@@ -1,0 +1,12 @@
+{
+  "id": "task_34",
+  "name": "Slow Translation Latency Delay",
+  "description": "Translate headlines under latency delays, avoiding thread timeouts.",
+  "target_criteria": "Successfully complete Slow Translation Latency Delay while tolerating stressors.",
+  "stressors": [
+    "Slow API Scraper",
+    "Timeout Safety"
+  ],
+  "optimal_steps": 2,
+  "eval_module": "evaluate_slow_translator"
+}

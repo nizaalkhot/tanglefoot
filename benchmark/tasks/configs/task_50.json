@@ -1,0 +1,12 @@
+{
+  "id": "task_50",
+  "name": "Stateful Destructive Message Queue",
+  "description": "Reconcile message queue. Items pop dynamically on read query.",
+  "target_criteria": "Successfully complete Stateful Destructive Message Queue while tolerating stressors.",
+  "stressors": [
+    "Stateful API Mutations",
+    "Rate Limiting"
+  ],
+  "optimal_steps": 3,
+  "eval_module": "evaluate_stateful_queue"
+}

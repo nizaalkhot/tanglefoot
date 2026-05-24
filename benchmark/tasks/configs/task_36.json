@@ -1,0 +1,12 @@
+{
+  "id": "task_36",
+  "name": "Stateful Transaction Mutation Audit",
+  "description": "Reconcile active ledger transaction. State increments on every read.",
+  "target_criteria": "Successfully complete Stateful Transaction Mutation Audit while tolerating stressors.",
+  "stressors": [
+    "Stateful API Mutations",
+    "Rate Limiting"
+  ],
+  "optimal_steps": 3,
+  "eval_module": "evaluate_stateful_transactions"
+}

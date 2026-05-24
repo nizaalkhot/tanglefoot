@@ -1,0 +1,12 @@
+{
+  "id": "task_21",
+  "name": "Stateful Ticket Queue Mutation",
+  "description": "Audit dynamic queue volume. The queue size fluctuates on every query.",
+  "target_criteria": "Successfully complete Stateful Ticket Queue Mutation while tolerating stressors.",
+  "stressors": [
+    "Stateful API Mutations",
+    "Rate Limiting"
+  ],
+  "optimal_steps": 3,
+  "eval_module": "evaluate_stateful_ticket_queue"
+}

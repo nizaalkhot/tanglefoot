@@ -1,0 +1,12 @@
+{
+  "id": "task_23",
+  "name": "Swapped Industrial Sensors Anomaly",
+  "description": "Verify physical readings. Swapped values between temp and pressure.",
+  "target_criteria": "Successfully complete Swapped Industrial Sensors Anomaly while tolerating stressors.",
+  "stressors": [
+    "Lying Tool",
+    "Swapped Coordinates"
+  ],
+  "optimal_steps": 2,
+  "eval_module": "evaluate_swapped_sensors"
+}

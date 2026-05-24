@@ -1,0 +1,12 @@
+{
+  "id": "task_56",
+  "name": "Slow Sentiment Classifier Delay",
+  "description": "Parse sentiment under model latency delays, ensuring stable runs.",
+  "target_criteria": "Successfully complete Slow Sentiment Classifier Delay while tolerating stressors.",
+  "stressors": [
+    "Slow API Scraper",
+    "Timeout Safety"
+  ],
+  "optimal_steps": 2,
+  "eval_module": "evaluate_slow_sentiment"
+}

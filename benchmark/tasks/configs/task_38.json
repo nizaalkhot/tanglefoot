@@ -1,0 +1,12 @@
+{
+  "id": "task_38",
+  "name": "Contradictory Product Inventory Sensor",
+  "description": "Verify inventory. E-commerce platforms report contradictory stock.",
+  "target_criteria": "Successfully complete Contradictory Product Inventory Sensor while tolerating stressors.",
+  "stressors": [
+    "Contradictory Sources",
+    "Active Directory Lying"
+  ],
+  "optimal_steps": 2,
+  "eval_module": "evaluate_contradictory_inventory"
+}

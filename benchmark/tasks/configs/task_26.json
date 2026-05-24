@@ -1,0 +1,12 @@
+{
+  "id": "task_26",
+  "name": "Slow Database Transaction Latency",
+  "description": "Query transactional database under timeouts, managing scraper delay.",
+  "target_criteria": "Successfully complete Slow Database Transaction Latency while tolerating stressors.",
+  "stressors": [
+    "Slow API Scraper",
+    "Timeout Safety"
+  ],
+  "optimal_steps": 2,
+  "eval_module": "evaluate_slow_database"
+}

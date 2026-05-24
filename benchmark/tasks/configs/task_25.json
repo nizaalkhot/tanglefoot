@@ -1,0 +1,12 @@
+{
+  "id": "task_25",
+  "name": "Contradictory Stock Price Ticker",
+  "description": "Verify share value. Reports mismatch prices across database providers.",
+  "target_criteria": "Successfully complete Contradictory Stock Price Ticker while tolerating stressors.",
+  "stressors": [
+    "Contradictory Sources",
+    "Active Directory Lying"
+  ],
+  "optimal_steps": 2,
+  "eval_module": "evaluate_contradictory_stocks"
+}

@@ -1,0 +1,12 @@
+{
+  "id": "task_43",
+  "name": "Lying Geo-IP Location Lookup",
+  "description": "Verify client IP location. Lying Geo-IP API reports incorrect country.",
+  "target_criteria": "Successfully complete Lying Geo-IP Location Lookup while tolerating stressors.",
+  "stressors": [
+    "Lying Tool",
+    "Contradictory Sources"
+  ],
+  "optimal_steps": 2,
+  "eval_module": "evaluate_lying_geoip"
+}

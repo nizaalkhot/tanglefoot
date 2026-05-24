@@ -1,0 +1,13 @@
+{
+  "id": "task_45",
+  "name": "Flaky Cloud Storage Upload Instability",
+  "description": "Upload dump to S3. API throttles and drops network sockets.",
+  "target_criteria": "Successfully complete Flaky Cloud Storage Upload Instability while tolerating stressors.",
+  "stressors": [
+    "API Rate Limiting",
+    "API Crashes",
+    "Omission"
+  ],
+  "optimal_steps": 4,
+  "eval_module": "evaluate_flaky_storage"
+}

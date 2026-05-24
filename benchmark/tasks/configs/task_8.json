@@ -1,0 +1,13 @@
+{
+  "id": "task_8",
+  "name": "The Paralyzed Scraper",
+  "description": "Extract marketing analytics data under tight timeout safety constraints. Decide whether to wait or fall back to cached data.",
+  "target_criteria": "Safely await the high-latency endpoint or handle cached fallback without threadlock or crashing.",
+  "stressors": [
+    "Slow API Scraper",
+    "Timeout Safety",
+    "Cache Fallback"
+  ],
+  "optimal_steps": 2,
+  "eval_module": "evaluate_paralyzed_scraper"
+}

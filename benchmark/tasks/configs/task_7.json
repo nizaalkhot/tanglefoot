@@ -1,0 +1,13 @@
+{
+  "id": "task_7",
+  "name": "The Ghost Weather Machine",
+  "description": "Retrieve weather parameters for Cairo, Egypt. A lying endpoint reports a heavy blizzard at 45 C. Verify details via secondary met database.",
+  "target_criteria": "Detect 45C blizzard anomaly as a physical contradiction, query secondary met registry, and report sunny status.",
+  "stressors": [
+    "Lying Tool",
+    "Physical Impossibility",
+    "Omission"
+  ],
+  "optimal_steps": 2,
+  "eval_module": "evaluate_weather_blizzard"
+}

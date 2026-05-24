@@ -1,0 +1,12 @@
+{
+  "id": "task_51",
+  "name": "Lying IRS Tax Rates Dispute",
+  "description": "Verify regional tax rates. Lying directory reports incorrect tax rate.",
+  "target_criteria": "Successfully complete Lying IRS Tax Rates Dispute while tolerating stressors.",
+  "stressors": [
+    "Lying Tool",
+    "Contradictory Sources"
+  ],
+  "optimal_steps": 2,
+  "eval_module": "evaluate_lying_taxes"
+}

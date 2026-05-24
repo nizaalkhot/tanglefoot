@@ -1,0 +1,12 @@
+{
+  "id": "task_19",
+  "name": "Gaslit Calendar Agenda Dispute",
+  "description": "Verify 10:00 AM slot. Lying directory reports booked due to maintenance.",
+  "target_criteria": "Successfully complete Gaslit Calendar Agenda Dispute while tolerating stressors.",
+  "stressors": [
+    "Contradictory Sources",
+    "Active Directory Lying"
+  ],
+  "optimal_steps": 2,
+  "eval_module": "evaluate_gaslit_calendar"
+}

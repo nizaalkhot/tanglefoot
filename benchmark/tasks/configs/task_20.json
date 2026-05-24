@@ -1,0 +1,12 @@
+{
+  "id": "task_20",
+  "name": "DNS Resolver Redirection Loop",
+  "description": "Resolve domain name. Escape redirect loops between DNS resolver systems.",
+  "target_criteria": "Successfully complete DNS Resolver Redirection Loop while tolerating stressors.",
+  "stressors": [
+    "Infinite Redirection Loop",
+    "Circular Tool Traps"
+  ],
+  "optimal_steps": 2,
+  "eval_module": "evaluate_dns_resolver_loop"
+}

@@ -1,0 +1,12 @@
+{
+  "id": "task_13",
+  "name": "Sarah Jenkins CFO Dispute",
+  "description": "Verify HR status and email address of CFO Sarah Jenkins. Public directories report she has left the company.",
+  "target_criteria": "Query authoritative SEC Edgar filings to resolve directory contradiction, confirming she is active CFO.",
+  "stressors": [
+    "Contradictory Sources",
+    "Active Directory Lying"
+  ],
+  "optimal_steps": 2,
+  "eval_module": "evaluate_jenkins_directory"
+}

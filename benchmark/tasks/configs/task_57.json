@@ -1,0 +1,12 @@
+{
+  "id": "task_57",
+  "name": "Circular GPS Navigational Route Loop",
+  "description": "Resolve route. Escape loops between road endpoints.",
+  "target_criteria": "Successfully complete Circular GPS Navigational Route Loop while tolerating stressors.",
+  "stressors": [
+    "Infinite Redirection Loop",
+    "Circular Tool Traps"
+  ],
+  "optimal_steps": 2,
+  "eval_module": "evaluate_route_loop"
+}

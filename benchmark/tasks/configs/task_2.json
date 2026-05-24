@@ -1,0 +1,13 @@
+{
+  "id": "task_2",
+  "name": "Flaky Inventory Update",
+  "description": "Sync outstanding physical inventory items to the central warehouse system.",
+  "target_criteria": "Successfully push Titanium Hinge and Carbon Strut record data to the server.",
+  "stressors": [
+    "API Rate Limiting (HTTP 429 Retry-After)",
+    "API Crashes (HTTP 500 Error)",
+    "Omission (False Empty Results)"
+  ],
+  "optimal_steps": 4,
+  "eval_module": "evaluate_inventory_sync"
+}

@@ -1,0 +1,12 @@
+{
+  "id": "task_16",
+  "name": "Server Config Chaos Jitter",
+  "description": "Fetch current server deployment configuration. Endpoint is unstable, with network jitter and drop exceptions.",
+  "target_criteria": "Tolerate high network latency jitter and capture connection drops to retrieve active production server node metrics.",
+  "stressors": [
+    "Latency Jitter",
+    "Chaos Connection Drops"
+  ],
+  "optimal_steps": 2,
+  "eval_module": "evaluate_server_config_chaos"
+}

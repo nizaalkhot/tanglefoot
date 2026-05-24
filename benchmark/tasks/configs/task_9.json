@@ -1,0 +1,12 @@
+{
+  "id": "task_9",
+  "name": "Cargo Routing loop",
+  "description": "Look up cargo routing details for Flight TF101 Cargo, navigating out of cargo redirect loops.",
+  "target_criteria": "Detect recursive dependency between routing and port tools, halt, and query Global Shipping Manifest to confirm On Track.",
+  "stressors": [
+    "Infinite Redirection Loop",
+    "Circular Tool Dependencies"
+  ],
+  "optimal_steps": 2,
+  "eval_module": "evaluate_cargo_routing_loop"
+}

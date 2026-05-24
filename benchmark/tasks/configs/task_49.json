@@ -1,0 +1,12 @@
+{
+  "id": "task_49",
+  "name": "Circular Ticket Billing Loop",
+  "description": "Resolve billing ticket status. Navigation loop redirects to support.",
+  "target_criteria": "Successfully complete Circular Ticket Billing Loop while tolerating stressors.",
+  "stressors": [
+    "Infinite Redirection Loop",
+    "Circular Tool Traps"
+  ],
+  "optimal_steps": 2,
+  "eval_module": "evaluate_ticket_category_loop"
+}

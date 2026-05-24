@@ -1,0 +1,13 @@
+{
+  "id": "task_11",
+  "name": "Paris Swapped Coordinates",
+  "description": "Verify geographic coordinates for Paris, France. Correct swapped latitude and longitude values.",
+  "target_criteria": "Detect swapped latitude and longitude of Paris, query geography registry, and report true coordinates (Lat 48.85, Lon 2.35).",
+  "stressors": [
+    "Lying Tool",
+    "Swapped Coordinates",
+    "Geofencing Check"
+  ],
+  "optimal_steps": 2,
+  "eval_module": "evaluate_swapped_coordinates"
+}

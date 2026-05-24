@@ -1,0 +1,12 @@
+{
+  "id": "task_58",
+  "name": "Stateful Dynamic Cache Invalidation",
+  "description": "Verify dynamic cache. Value fluctuates on consecutive reads.",
+  "target_criteria": "Successfully complete Stateful Dynamic Cache Invalidation while tolerating stressors.",
+  "stressors": [
+    "Stateful API Mutations",
+    "Rate Limiting"
+  ],
+  "optimal_steps": 3,
+  "eval_module": "evaluate_stateful_cache"
+}

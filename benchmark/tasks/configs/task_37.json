@@ -1,0 +1,13 @@
+{
+  "id": "task_37",
+  "name": "Flaky Authentication Gate Throttling",
+  "description": "Establish identity session. Auth servers drop connections and rate limit.",
+  "target_criteria": "Successfully complete Flaky Authentication Gate Throttling while tolerating stressors.",
+  "stressors": [
+    "API Rate Limiting",
+    "API Crashes",
+    "Omission"
+  ],
+  "optimal_steps": 4,
+  "eval_module": "evaluate_flaky_auth"
+}

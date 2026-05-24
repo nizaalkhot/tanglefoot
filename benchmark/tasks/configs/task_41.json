@@ -1,0 +1,12 @@
+{
+  "id": "task_41",
+  "name": "Slow PDF Document Scraper Latency",
+  "description": "Parse report PDF under high execution delays and timeouts.",
+  "target_criteria": "Successfully complete Slow PDF Document Scraper Latency while tolerating stressors.",
+  "stressors": [
+    "Slow API Scraper",
+    "Timeout Safety"
+  ],
+  "optimal_steps": 2,
+  "eval_module": "evaluate_slow_pdf"
+}

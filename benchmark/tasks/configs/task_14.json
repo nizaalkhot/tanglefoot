@@ -1,0 +1,12 @@
+{
+  "id": "task_14",
+  "name": "Ticker Validation Loop Escape",
+  "description": "Check real-time stock pricing for Tanglefoot Inc, escaping circular redirection loops between ticker and validation tools.",
+  "target_criteria": "Bypass ticker validation redirect loop, fallback to Nasdaq backup cache, and retrieve price of $45.50.",
+  "stressors": [
+    "Infinite Redirection Loop",
+    "Circular Tool Traps"
+  ],
+  "optimal_steps": 2,
+  "eval_module": "evaluate_ticker_validation_loop"
+}

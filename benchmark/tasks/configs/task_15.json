@@ -1,0 +1,12 @@
+{
+  "id": "task_15",
+  "name": "Bob Miller CRM Omission",
+  "description": "Retrieve active contact details and email address for customer Bob Miller.",
+  "target_criteria": "CRM lookup lies that customer is not found, query invoice transaction logs to match name, resolve client ID, and fetch bob@example.com.",
+  "stressors": [
+    "Omission Lying Tool",
+    "Multi-hop logic bypass"
+  ],
+  "optimal_steps": 3,
+  "eval_module": "evaluate_bob_miller_omission"
+}

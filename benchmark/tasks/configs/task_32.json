@@ -1,0 +1,12 @@
+{
+  "id": "task_32",
+  "name": "Contradictory Shipping Tariffs Registry",
+  "description": "Retrieve international shipping tariffs. Outdated directory lists wrong rates.",
+  "target_criteria": "Successfully complete Contradictory Shipping Tariffs Registry while tolerating stressors.",
+  "stressors": [
+    "Contradictory Sources",
+    "Active Directory Lying"
+  ],
+  "optimal_steps": 2,
+  "eval_module": "evaluate_shipping_tariffs"
+}

@@ -1,0 +1,12 @@
+{
+  "id": "task_30",
+  "name": "Circular NPM Resolver Loop",
+  "description": "Resolve node package version. Loops traps local registry validation.",
+  "target_criteria": "Successfully complete Circular NPM Resolver Loop while tolerating stressors.",
+  "stressors": [
+    "Infinite Redirection Loop",
+    "Circular Tool Traps"
+  ],
+  "optimal_steps": 2,
+  "eval_module": "evaluate_npm_resolver_loop"
+}

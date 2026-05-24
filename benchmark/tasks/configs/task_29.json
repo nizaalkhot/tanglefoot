@@ -1,0 +1,13 @@
+{
+  "id": "task_29",
+  "name": "Flaky Web Crawler Rate Limit",
+  "description": "Crawl site for public index. Triggers 429 errors and empty data payloads.",
+  "target_criteria": "Successfully complete Flaky Web Crawler Rate Limit while tolerating stressors.",
+  "stressors": [
+    "API Rate Limiting",
+    "API Crashes",
+    "Omission"
+  ],
+  "optimal_steps": 4,
+  "eval_module": "evaluate_flaky_crawler"
+}

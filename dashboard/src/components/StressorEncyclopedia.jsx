@@ -1,4 +1,4 @@
-import React from 'react';
+// Stressor Codex describing adversarial failure modes.
 import { AlertCircle, EyeOff, Hourglass, HelpCircle, RefreshCw } from 'lucide-react';
 
 export default function StressorEncyclopedia() {

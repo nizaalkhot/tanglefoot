@@ -1,0 +1,13 @@
+{
+  "id": "task_24",
+  "name": "Flaky Email Dispatcher Ledger",
+  "description": "Verify email ledger status. Server rate-limits and returns empty records.",
+  "target_criteria": "Successfully complete Flaky Email Dispatcher Ledger while tolerating stressors.",
+  "stressors": [
+    "API Rate Limiting",
+    "API Crashes",
+    "Omission"
+  ],
+  "optimal_steps": 4,
+  "eval_module": "evaluate_flaky_email"
+}

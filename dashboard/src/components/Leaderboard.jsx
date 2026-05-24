@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Trophy, TrendingUp, AlertTriangle, ArrowUpDown, ChevronRight, Activity, DollarSign } from 'lucide-react';
+import { useState } from 'react';
+import { Trophy, TrendingUp, AlertTriangle, ArrowUpDown, ChevronRight, Activity } from 'lucide-react';
 import benchmarkData from '../data/benchmark_results.json';
 
 export default function Leaderboard() {

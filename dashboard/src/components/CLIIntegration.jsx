@@ -1,4 +1,4 @@
-import React from 'react';
+// CLI Integration component utilizing standard terminal layouts.
 import { Terminal, Download, Play, ShieldCheck, GitFork } from 'lucide-react';
 
 export default function CLIIntegration() {

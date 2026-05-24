@@ -1,0 +1,12 @@
+{
+  "id": "task_35",
+  "name": "Circular Employee Manager Loop org chart",
+  "description": "Reconstruct reporting structures, resolving manager circular loops.",
+  "target_criteria": "Successfully complete Circular Employee Manager Loop org chart while tolerating stressors.",
+  "stressors": [
+    "Infinite Redirection Loop",
+    "Circular Tool Traps"
+  ],
+  "optimal_steps": 2,
+  "eval_module": "evaluate_employee_manager_loop"
+}

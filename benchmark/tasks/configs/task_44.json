@@ -1,0 +1,12 @@
+{
+  "id": "task_44",
+  "name": "Circular Symlink Redirection Loop",
+  "description": "Resolve path. Escape endless symlink loop redirections.",
+  "target_criteria": "Successfully complete Circular Symlink Redirection Loop while tolerating stressors.",
+  "stressors": [
+    "Infinite Redirection Loop",
+    "Circular Tool Traps"
+  ],
+  "optimal_steps": 2,
+  "eval_module": "evaluate_symlink_loop"
+}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import Leaderboard from './components/Leaderboard';
 import StressArena from './components/StressArena';
@@ -7,7 +7,7 @@ import CLIIntegration from './components/CLIIntegration';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('leaderboard');
-  const [isDark, setIsDark] = useState(true);
+  const [isDark, setIsDark] = useState(false);
 
   // Apply dark/light class modifiers on the HTML body element
   useEffect(() => {

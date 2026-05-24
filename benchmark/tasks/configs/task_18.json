@@ -1,0 +1,13 @@
+{
+  "id": "task_18",
+  "name": "Flaky Git Repository Controller",
+  "description": "Checkout latest production commit hash. Throttling and drops.",
+  "target_criteria": "Successfully complete Flaky Git Repository Controller while tolerating stressors.",
+  "stressors": [
+    "API Rate Limiting",
+    "API Crashes",
+    "Omission"
+  ],
+  "optimal_steps": 4,
+  "eval_module": "evaluate_flaky_git_checkout"
+}

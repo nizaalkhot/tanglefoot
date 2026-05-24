@@ -1,0 +1,13 @@
+{
+  "id": "task_54",
+  "name": "Flaky Kubernetes API Pod Crashloop",
+  "description": "Verify pod status. Kubernetes API server throttles and crashes.",
+  "target_criteria": "Successfully complete Flaky Kubernetes API Pod Crashloop while tolerating stressors.",
+  "stressors": [
+    "API Rate Limiting",
+    "API Crashes",
+    "Omission"
+  ],
+  "optimal_steps": 4,
+  "eval_module": "evaluate_flaky_kubernetes"
+}

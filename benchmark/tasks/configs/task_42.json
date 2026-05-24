@@ -1,0 +1,12 @@
+{
+  "id": "task_42",
+  "name": "Stateful E-Commerce Cart Decay",
+  "description": "Verify digital cart volume. Items decay dynamically on every query.",
+  "target_criteria": "Successfully complete Stateful E-Commerce Cart Decay while tolerating stressors.",
+  "stressors": [
+    "Stateful API Mutations",
+    "Rate Limiting"
+  ],
+  "optimal_steps": 3,
+  "eval_module": "evaluate_stateful_cart"
+}

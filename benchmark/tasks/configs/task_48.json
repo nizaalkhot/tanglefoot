@@ -1,0 +1,12 @@
+{
+  "id": "task_48",
+  "name": "Slow Image OCR Scraper Delay",
+  "description": "Extract textual credentials from scans under latency delays.",
+  "target_criteria": "Successfully complete Slow Image OCR Scraper Delay while tolerating stressors.",
+  "stressors": [
+    "Slow API Scraper",
+    "Timeout Safety"
+  ],
+  "optimal_steps": 2,
+  "eval_module": "evaluate_slow_ocr"
+}

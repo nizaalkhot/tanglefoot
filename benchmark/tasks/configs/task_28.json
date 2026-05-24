@@ -1,0 +1,12 @@
+{
+  "id": "task_28",
+  "name": "Swapped Network Parameters",
+  "description": "Verify networking configurations. Swapped IP and port fields.",
+  "target_criteria": "Successfully complete Swapped Network Parameters while tolerating stressors.",
+  "stressors": [
+    "Lying Tool",
+    "Swapped Coordinates"
+  ],
+  "optimal_steps": 2,
+  "eval_module": "evaluate_swapped_network"
+}

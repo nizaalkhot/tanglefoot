@@ -1,0 +1,12 @@
+{
+  "id": "task_40",
+  "name": "Swapped Metric Units Conversion Table",
+  "description": "Calculate packaging weight. Corrects swapped labels for weight fields.",
+  "target_criteria": "Successfully complete Swapped Metric Units Conversion Table while tolerating stressors.",
+  "stressors": [
+    "Lying Tool",
+    "Swapped Coordinates"
+  ],
+  "optimal_steps": 2,
+  "eval_module": "evaluate_swapped_units"
+}

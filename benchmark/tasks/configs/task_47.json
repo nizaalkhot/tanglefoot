@@ -1,0 +1,12 @@
+{
+  "id": "task_47",
+  "name": "Contradictory Departure Gate Transponder",
+  "description": "Verify gate. Boarding pass and informational screen conflict.",
+  "target_criteria": "Successfully complete Contradictory Departure Gate Transponder while tolerating stressors.",
+  "stressors": [
+    "Contradictory Sources",
+    "Active Directory Lying"
+  ],
+  "optimal_steps": 2,
+  "eval_module": "evaluate_contradictory_gates"
+}

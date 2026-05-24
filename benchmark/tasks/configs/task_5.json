@@ -1,0 +1,12 @@
+{
+  "id": "task_5",
+  "name": "Circular Redirect Loop Escape",
+  "description": "Look up flight schedule details for Flight TF101 to verify departure.",
+  "target_criteria": "Escape the circular redirection between search tool and airport-lookup, fallback to Global Flight Registry API, and report 'On Time'.",
+  "stressors": [
+    "Infinite Redirection Loop",
+    "Circular Tool Dependencies"
+  ],
+  "optimal_steps": 2,
+  "eval_module": "evaluate_redirect_loop"
+}

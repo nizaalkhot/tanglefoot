@@ -1,4 +1,4 @@
-import React from 'react';
+// Application Sidebar component.
 import { LayoutDashboard, Terminal, BookOpen, Cpu, Sun, Moon } from 'lucide-react';
 
 export default function Sidebar({ activeTab, setActiveTab, isDark, toggleTheme }) {

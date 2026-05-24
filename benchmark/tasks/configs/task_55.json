@@ -1,0 +1,12 @@
+{
+  "id": "task_55",
+  "name": "Contradictory Legal Contract Clauses",
+  "description": "Verify liability clause. Amendment lists unlimited, principal lists limit.",
+  "target_criteria": "Successfully complete Contradictory Legal Contract Clauses while tolerating stressors.",
+  "stressors": [
+    "Contradictory Sources",
+    "Active Directory Lying"
+  ],
+  "optimal_steps": 2,
+  "eval_module": "evaluate_contradictory_legal"
+}

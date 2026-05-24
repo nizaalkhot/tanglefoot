@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Play, Pause, RotateCcw, Clock, Cpu, DollarSign, ShieldAlert, CheckCircle, Terminal as TermIcon, ShieldCheck } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Play, Pause, RotateCcw, Clock, Cpu, DollarSign, ShieldAlert, CheckCircle, Terminal as TermIcon, ShieldCheck, Zap, RefreshCw, AlertTriangle } from 'lucide-react';
 import benchmarkData from '../data/benchmark_results.json';
 
 export default function StressArena() {
@@ -21,6 +21,60 @@ export default function StressArena() {
   const [isLiveFeed, setIsLiveFeed] = useState(false);
   const [hasGuardrailAlert, setHasGuardrailAlert] = useState(false);
 
+  // Chaos Control Console States
+  const [chaosEnabled, setChaosEnabled] = useState(false);
+  const latencyJitter = true;
+  const connectionDrops = true;
+  const [latencyDelay, setLatencyDelay] = useState(2.5);
+  const [dropProb, setDropProb] = useState(0.25);
+  const [rateLimitIntensity, setRateLimitIntensity] = useState(3);
+  const [chaosSyncStatus, setChaosSyncStatus] = useState('synced'); // 'synced' | 'syncing' | 'offline'
+
+  const wsRef = useRef(null);
+
+  const syncChaos = async (enabled, jitter, drops, delay = latencyDelay, prob = dropProb, intensity = rateLimitIntensity) => {
+    setChaosSyncStatus('syncing');
+    try {
+      const queryParams = new URLSearchParams({
+        enabled: enabled.toString(),
+        jitter: jitter.toString(),
+        drops: drops.toString(),
+        latency_delay: delay.toString(),
+        drop_prob: prob.toString(),
+        rate_limit_intensity: intensity.toString()
+      });
+      const response = await fetch(`http://localhost:8005/api/chaos/toggle?${queryParams}`, {
+        method: 'POST'
+      });
+      if (response.ok) {
+        setChaosSyncStatus('synced');
+      } else {
+        setChaosSyncStatus('offline');
+      }
+    } catch (error) {
+      console.error("Failed to sync chaos configuration:", error);
+      setChaosSyncStatus('offline');
+    }
+  };
+
+  useEffect(() => {
+    const fetchInitialChaos = async () => {
+      try {
+        const response = await fetch(`http://localhost:8005/api/chaos/toggle?enabled=${chaosEnabled}&jitter=${latencyJitter}&drops=${connectionDrops}&latency_delay=${latencyDelay}&drop_prob=${dropProb}&rate_limit_intensity=${rateLimitIntensity}`, {
+          method: 'POST'
+        });
+        if (response.ok) {
+          setChaosSyncStatus('synced');
+        } else {
+          setChaosSyncStatus('offline');
+        }
+      } catch {
+        setChaosSyncStatus('offline');
+      }
+    };
+    fetchInitialChaos();
+  }, []);
+
   const terminalEndRef = useRef(null);
   const timerRef = useRef(null);
   const playbackRef = useRef(null);
@@ -40,13 +94,44 @@ export default function StressArena() {
   const activeTaskDetails = benchmarkData.tasks.find(t => t.id === selectedTask);
   const activeFwDetails = benchmarkData.leaderboard.find(f => f.id === selectedFramework);
 
+  const handlePause = () => {
+    setIsPlaying(false);
+  };
+
+  const handleReset = () => {
+    setIsPlaying(false);
+    setTerminalLogs([]);
+    setCurrentStep(-1);
+    setElapsedTime(0.0);
+    setTokensConsumed(0);
+    setAccruedCost(0.00);
+    setResilienceScore(100);
+    setGuardrailScore(100);
+    setHasGuardrailAlert(false);
+  };
+
+  const handleStart = () => {
+    if (isLiveFeed) return;
+    if (currentStep >= activeTrace.steps.length - 1) {
+      setTerminalLogs([]);
+      setCurrentStep(-1);
+      setElapsedTime(0);
+      setTokensConsumed(0);
+      setAccruedCost(0);
+      setResilienceScore(100);
+      setGuardrailScore(100);
+      setHasGuardrailAlert(false);
+    }
+    setIsPlaying(true);
+  };
+
   // V2: WebSocket Connection Listener
   useEffect(() => {
-    let ws;
     let reconnectTimeout;
 
     const connectWS = () => {
-      ws = new WebSocket('ws://localhost:8005/ws');
+      const ws = new WebSocket('ws://localhost:8005/ws');
+      wsRef.current = ws;
 
       ws.onopen = () => {
         console.log("Connected to Tanglefoot Live WebSocket Server.");
@@ -122,10 +207,35 @@ export default function StressArena() {
     connectWS();
 
     return () => {
-      if (ws) ws.close();
+      if (wsRef.current) wsRef.current.close();
       clearTimeout(reconnectTimeout);
     };
   }, []);
+
+  const triggerLiveRun = () => {
+    setIsLiveFeed(true);
+    setTerminalLogs([]);
+    setElapsedTime(0.0);
+    setTokensConsumed(0);
+    setAccruedCost(0.00);
+    setResilienceScore(100);
+    setGuardrailScore(100);
+    setHasGuardrailAlert(false);
+    
+    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+      wsRef.current.send(JSON.stringify({
+        action: "run",
+        agent: selectedFramework,
+        task: selectedTask
+      }));
+    } else {
+      setTerminalLogs([{
+        timestamp: "00:00.0",
+        type: "failure",
+        message: "Unable to deploy live run. Local FastAPI WebSocket server connection is offline."
+      }]);
+    }
+  };
 
   // Auto scroll terminal
   useEffect(() => {
@@ -195,36 +305,6 @@ export default function StressArena() {
     };
   }, [isPlaying, speed, selectedFramework, selectedTask, isLiveFeed]);
 
-  const handleStart = () => {
-    if (isLiveFeed) return;
-    if (currentStep >= activeTrace.steps.length - 1) {
-      setTerminalLogs([]);
-      setCurrentStep(-1);
-      setElapsedTime(0);
-      setTokensConsumed(0);
-      setAccruedCost(0);
-      setResilienceScore(100);
-      setGuardrailScore(100);
-      setHasGuardrailAlert(false);
-    }
-    setIsPlaying(true);
-  };
-
-  const handlePause = () => {
-    setIsPlaying(false);
-  };
-
-  const handleReset = () => {
-    setIsPlaying(false);
-    setTerminalLogs([]);
-    setCurrentStep(-1);
-    setElapsedTime(0.0);
-    setTokensConsumed(0);
-    setAccruedCost(0.00);
-    setResilienceScore(100);
-    setGuardrailScore(100);
-    setHasGuardrailAlert(false);
-  };
 
   const handleExitLiveFeed = () => {
     setIsLiveFeed(false);
@@ -394,28 +474,284 @@ export default function StressArena() {
             </div>
 
             {/* Command Trigger Buttons */}
-            <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '10px' }}>
               {isLiveFeed ? (
-                <div style={{ fontSize: '12px', color: 'hsl(var(--success))', background: 'hsl(var(--success) / 0.05)', border: '1px solid hsl(var(--success) / 0.2)', padding: '10px', borderRadius: 'var(--radius-md)', textAlign: 'center', width: '100%', fontWeight: 500 }}>
-                  📡 Terminal locked to active Python CLI feed.
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  <div style={{ fontSize: '12px', color: 'hsl(var(--success))', background: 'hsl(var(--success) / 0.05)', border: '1px solid hsl(var(--success) / 0.2)', padding: '10px', borderRadius: 'var(--radius-md)', textAlign: 'center', fontWeight: 500 }}>
+                    📡 Terminal locked to active Python CLI feed.
+                  </div>
+                  <button className="btn-secondary" onClick={handleExitLiveFeed} style={{ width: '100%', justifyContent: 'center' }}>
+                    Exit Live Feed
+                  </button>
                 </div>
               ) : (
-                <>
-                  {isPlaying ? (
-                    <button className="btn-secondary" onClick={handlePause} style={{ flexGrow: 1, justifyContent: 'center' }}>
-                      <Pause size={16} /> Pause
-                    </button>
-                  ) : (
-                    <button className="btn-primary" onClick={handleStart} style={{ flexGrow: 1, justifyContent: 'center' }}>
-                      <Play size={16} /> {currentStep === -1 ? 'Deploy Agent' : 'Resume'}
-                    </button>
-                  )}
-                  <button className="btn-secondary" onClick={handleReset} style={{ padding: '12px' }}>
-                    <RotateCcw size={16} />
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {/* Live Run Trigger */}
+                  <button 
+                    className="btn-primary" 
+                    onClick={triggerLiveRun} 
+                    disabled={chaosSyncStatus === 'offline'}
+                    style={{ 
+                      width: '100%', 
+                      justifyContent: 'center', 
+                      background: 'linear-gradient(135deg, hsl(var(--warning)), hsl(var(--error)))', 
+                      borderColor: 'hsl(var(--warning) / 0.5)',
+                      boxShadow: '0 4px 14px hsl(var(--warning) / 0.2)',
+                      fontWeight: 700
+                    }}
+                  >
+                    <Zap size={16} /> Deploy Live Agent Run
                   </button>
-                </>
+                  
+                  {/* Sandbox Replay trigger */}
+                  <div style={{ display: 'flex', gap: '8px' }}>
+                    {isPlaying ? (
+                      <button className="btn-secondary" onClick={handlePause} style={{ flexGrow: 1, justifyContent: 'center' }}>
+                        <Pause size={16} /> Pause Replay
+                      </button>
+                    ) : (
+                      <button className="btn-secondary" onClick={handleStart} style={{ flexGrow: 1, justifyContent: 'center', borderColor: 'hsl(var(--cyan) / 0.3)' }}>
+                        <Play size={16} /> {currentStep === -1 ? 'Simulate Replay' : 'Resume Replay'}
+                      </button>
+                    )}
+                    <button className="btn-secondary" onClick={handleReset} style={{ padding: '12px' }} title="Reset Sandbox">
+                      <RotateCcw size={16} />
+                    </button>
+                  </div>
+                </div>
               )}
             </div>
+          </div>
+
+          {/* Chaos Engineering Console */}
+          <div className="glass-panel" style={{ marginBottom: 0, display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid hsl(var(--border-color))', paddingBottom: '12px' }}>
+              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '16px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px', margin: 0 }}>
+                <Zap size={16} className="chaos-icon" style={{ color: chaosEnabled ? 'hsl(var(--warning))' : 'hsl(var(--text-muted))', transition: 'color 0.2s' }} />
+                Chaos Control Panel
+              </h3>
+              
+              {/* Sync Status Badge */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span 
+                  title={chaosSyncStatus === 'synced' ? 'Synchronized with FastAPI server' : chaosSyncStatus === 'syncing' ? 'Syncing with server...' : 'FastAPI Server Offline'}
+                  style={{
+                    width: '8px',
+                    height: '8px',
+                    borderRadius: '50%',
+                    background: chaosSyncStatus === 'synced' ? 'hsl(var(--success))' : chaosSyncStatus === 'syncing' ? 'hsl(var(--warning))' : 'hsl(var(--error))',
+                    boxShadow: chaosSyncStatus === 'synced' 
+                      ? '0 0 8px hsl(var(--success))' 
+                      : chaosSyncStatus === 'syncing' 
+                      ? '0 0 8px hsl(var(--warning))' 
+                      : '0 0 8px hsl(var(--error))',
+                    display: 'inline-block',
+                    transition: 'all 0.3s ease'
+                  }} 
+                />
+                <button 
+                  onClick={() => syncChaos(chaosEnabled, latencyJitter, connectionDrops)}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    color: 'hsl(var(--text-muted))',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    padding: '2px',
+                    borderRadius: '4px'
+                  }}
+                >
+                  <RefreshCw size={12} className={chaosSyncStatus === 'syncing' ? 'animate-spin' : ''} />
+                </button>
+              </div>
+            </div>
+
+            {/* SVG Circular Stress Telemetry Gauge */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '16px',
+              background: 'hsl(var(--bg-card) / 0.3)',
+              border: '1px solid hsl(var(--border-color))',
+              borderRadius: 'var(--radius-md)',
+              padding: '14px',
+              marginBottom: '4px'
+            }}>
+              <div style={{ position: 'relative', width: '70px', height: '70px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <svg width="70" height="70" viewBox="0 0 100 100">
+                  <circle cx="50" cy="50" r="40" fill="transparent" stroke="hsl(var(--border-color))" strokeWidth="6" />
+                  <circle 
+                    cx="50" 
+                    cy="50" 
+                    r="40" 
+                    fill="transparent" 
+                    stroke={`hsl(${120 - Math.round(chaosEnabled ? (dropProb * 0.4 + (latencyDelay / 5.0) * 0.3 + (rateLimitIntensity / 10.0) * 0.3) * 100 : 0) * 1.2}, 85%, 45%)`} 
+                    strokeWidth="6" 
+                    strokeDasharray={2 * Math.PI * 40} 
+                    strokeDashoffset={(2 * Math.PI * 40) - (Math.round(chaosEnabled ? (dropProb * 0.4 + (latencyDelay / 5.0) * 0.3 + (rateLimitIntensity / 10.0) * 0.3) * 100 : 0) / 100) * (2 * Math.PI * 40)} 
+                    strokeLinecap="round" 
+                    transform="rotate(-90 50 50)" 
+                    style={{ transition: 'stroke-dashoffset 0.4s ease, stroke 0.4s ease' }} 
+                  />
+                </svg>
+                <div style={{ position: 'absolute', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <span style={{ fontSize: '16px', fontWeight: 800, fontFamily: 'var(--font-display)', color: `hsl(${120 - Math.round(chaosEnabled ? (dropProb * 0.4 + (latencyDelay / 5.0) * 0.3 + (rateLimitIntensity / 10.0) * 0.3) * 100 : 0) * 1.2}, 85%, 45%)`, transition: 'color 0.4s ease' }}>
+                    {Math.round(chaosEnabled ? (dropProb * 0.4 + (latencyDelay / 5.0) * 0.3 + (rateLimitIntensity / 10.0) * 0.3) * 100 : 0)}%
+                  </span>
+                  <span style={{ fontSize: '7px', textTransform: 'uppercase', fontWeight: 700, color: 'hsl(var(--text-dim))', letterSpacing: '0.5px' }}>Stress</span>
+                </div>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                <span style={{ fontWeight: 700, fontSize: '13px', color: 'hsl(var(--warning))' }}>Telemetry monitor</span>
+                <span style={{ fontSize: '10.5px', color: 'hsl(var(--text-muted))', lineHeight: '1.4' }}>
+                  {chaosEnabled ? (
+                    (dropProb * 0.4 + (latencyDelay / 5.0) * 0.3 + (rateLimitIntensity / 10.0) * 0.3) > 0.7 
+                      ? '🚨 CRITICAL PRESSURE RUNTIME' 
+                      : (dropProb * 0.4 + (latencyDelay / 5.0) * 0.3 + (rateLimitIntensity / 10.0) * 0.3) > 0.3 
+                      ? '⚡ STRESSOR EMULATION ON' 
+                      : '🟢 ACTIVE SYSTEM NOMINAL'
+                  ) : '⚪ SYSTEM INERT / STANDBY'}
+                </span>
+              </div>
+            </div>
+
+            {/* Global Chaos Toggle Switch */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              background: 'hsl(var(--bg-card) / 0.5)',
+              border: '1px solid hsl(var(--border-color))',
+              borderRadius: 'var(--radius-md)',
+              padding: '10px 12px',
+              transition: 'all 0.3s ease'
+            }}>
+              <div>
+                <span style={{ fontWeight: 600, fontSize: '13px', color: chaosEnabled ? 'hsl(var(--warning))' : 'inherit' }}>
+                  Inject Active Chaos
+                </span>
+                <p style={{ fontSize: '10px', color: 'hsl(var(--text-dim))', marginTop: '1px', margin: 0 }}>
+                  Inject failures dynamically into endpoints
+                </p>
+              </div>
+              <button
+                onClick={() => {
+                  const nextVal = !chaosEnabled;
+                  setChaosEnabled(nextVal);
+                  syncChaos(nextVal, latencyJitter, connectionDrops);
+                }}
+                style={{
+                  width: '38px',
+                  height: '22px',
+                  background: chaosEnabled ? 'hsl(var(--warning))' : 'hsl(var(--border-color))',
+                  borderRadius: '99px',
+                  position: 'relative',
+                  border: 'none',
+                  cursor: 'pointer',
+                  transition: 'background-color 0.3s'
+                }}
+              >
+                <div style={{
+                  width: '16px',
+                  height: '16px',
+                  background: '#fff',
+                  borderRadius: '50%',
+                  position: 'absolute',
+                  top: '3px',
+                  left: chaosEnabled ? '19px' : '3px',
+                  transition: 'left 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
+                }} />
+              </button>
+            </div>
+
+            {/* Sliders Container (visible/active only if Global is enabled) */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', opacity: chaosEnabled ? 1 : 0.5, pointerEvents: chaosEnabled ? 'auto' : 'none', transition: 'opacity 0.3s ease' }}>
+              
+              {/* Latency Delay Slider */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', fontWeight: 600 }}>
+                  <span>Latency Jitter Duration</span>
+                  <span style={{ color: 'hsl(var(--cyan))' }}>{latencyDelay.toFixed(1)}s</span>
+                </div>
+                <input 
+                  type="range"
+                  min="0.1"
+                  max="5.0"
+                  step="0.1"
+                  value={latencyDelay}
+                  onChange={(e) => {
+                    const val = parseFloat(e.target.value);
+                    setLatencyDelay(val);
+                    syncChaos(chaosEnabled, latencyJitter, connectionDrops, val, dropProb, rateLimitIntensity);
+                  }}
+                  style={{ accentColor: 'hsl(var(--cyan))', cursor: 'pointer' }}
+                />
+                <span style={{ fontSize: '9px', color: 'hsl(var(--text-muted))' }}>Sets max delay added to tools APIs</span>
+              </div>
+
+              {/* Connection Drops Probability Slider */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', fontWeight: 600 }}>
+                  <span>Socket Drop Rate</span>
+                  <span style={{ color: 'hsl(var(--error))' }}>{Math.round(dropProb * 100)}%</span>
+                </div>
+                <input 
+                  type="range"
+                  min="0.0"
+                  max="1.0"
+                  step="0.05"
+                  value={dropProb}
+                  onChange={(e) => {
+                    const val = parseFloat(e.target.value);
+                    setDropProb(val);
+                    syncChaos(chaosEnabled, latencyJitter, connectionDrops, latencyDelay, val, rateLimitIntensity);
+                  }}
+                  style={{ accentColor: 'hsl(var(--error))', cursor: 'pointer' }}
+                />
+                <span style={{ fontSize: '9px', color: 'hsl(var(--text-muted))' }}>Probability of random HTTP 503 drops</span>
+              </div>
+
+              {/* Rate Limit Intensity Slider */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', fontWeight: 600 }}>
+                  <span>Failure Threshold</span>
+                  <span style={{ color: 'hsl(var(--warning))' }}>{rateLimitIntensity} calls</span>
+                </div>
+                <input 
+                  type="range"
+                  min="1"
+                  max="10"
+                  step="1"
+                  value={rateLimitIntensity}
+                  onChange={(e) => {
+                    const val = parseInt(e.target.value, 10);
+                    setRateLimitIntensity(val);
+                    syncChaos(chaosEnabled, latencyJitter, connectionDrops, latencyDelay, dropProb, val);
+                  }}
+                  style={{ accentColor: 'hsl(var(--warning))', cursor: 'pointer' }}
+                />
+                <span style={{ fontSize: '9px', color: 'hsl(var(--text-muted))' }}>Number of consecutive errors (429/500) before recovery</span>
+              </div>
+
+            </div>
+
+            {chaosSyncStatus === 'offline' && (
+              <div style={{
+                fontSize: '11px',
+                color: 'hsl(var(--error))',
+                background: 'hsl(var(--error) / 0.05)',
+                border: '1px solid hsl(var(--error) / 0.2)',
+                borderRadius: '4px',
+                padding: '6px 8px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
+              }} className="animate-slide-up">
+                <AlertTriangle size={12} style={{ flexShrink: 0 }} />
+                <span>FastAPI backend offline. Live chaos disabled.</span>
+              </div>
+            )}
           </div>
 
           {/* Active Task Details Panel */}
@@ -525,9 +861,16 @@ export default function StressArena() {
           {/* Telemetry HUD Grid */}
           <div className="hud-grid" style={{ gridTemplateColumns: 'repeat(5, 1fr)' }}>
             {/* Elapsed Time */}
-            <div className="hud-card">
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', fontSize: '11px', color: 'hsl(var(--text-muted))', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                <Clock size={12} /> Latency Time
+            <div 
+              className="hud-card"
+              style={{
+                transition: 'all 0.4s ease',
+                borderColor: (chaosEnabled && latencyJitter) ? 'hsl(var(--warning) / 0.4)' : 'hsl(var(--border-color))',
+                boxShadow: (chaosEnabled && latencyJitter) ? '0 0 10px hsl(var(--warning) / 0.15)' : 'none'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', fontSize: '11px', color: (chaosEnabled && latencyJitter) ? 'hsl(var(--warning))' : 'hsl(var(--text-muted))', textTransform: 'uppercase', letterSpacing: '0.5px', transition: 'color 0.4s ease' }}>
+                <Clock size={12} /> Latency Time {(chaosEnabled && latencyJitter) && '⚡'}
               </div>
               <div className="hud-value" style={{ color: 'hsl(var(--text-primary))' }}>
                 {elapsedTime}s
@@ -555,9 +898,16 @@ export default function StressArena() {
             </div>
 
             {/* Resilience Score */}
-            <div className="hud-card">
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', fontSize: '11px', color: 'hsl(var(--text-muted))', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                <ShieldAlert size={12} /> Resilience Index
+            <div 
+              className="hud-card"
+              style={{
+                transition: 'all 0.4s ease',
+                borderColor: (chaosEnabled && connectionDrops) ? 'hsl(var(--error) / 0.4)' : 'hsl(var(--border-color))',
+                boxShadow: (chaosEnabled && connectionDrops) ? '0 0 10px hsl(var(--error) / 0.15)' : 'none'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', fontSize: '11px', color: (chaosEnabled && connectionDrops) ? 'hsl(var(--error))' : 'hsl(var(--text-muted))', textTransform: 'uppercase', letterSpacing: '0.5px', transition: 'color 0.4s ease' }}>
+                <ShieldAlert size={12} /> Resilience Index {(chaosEnabled && connectionDrops) && '⚠️'}
               </div>
               <div 
                 className="hud-value" 

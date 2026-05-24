@@ -1,0 +1,13 @@
+{
+  "id": "task_6",
+  "name": "The Stateful Stock Audit",
+  "description": "Audit the inventory of a high-demand item that dynamically decays on every query. Determine the rate of stock decay.",
+  "target_criteria": "Fetch stateful stock dynamically, identify stock decay of 1 unit per query, calculate depletion rate, and report correct remaining stock.",
+  "stressors": [
+    "Stateful API Mutations",
+    "Rate Limiting",
+    "Latency"
+  ],
+  "optimal_steps": 3,
+  "eval_module": "evaluate_stateful_stock_audit"
+}

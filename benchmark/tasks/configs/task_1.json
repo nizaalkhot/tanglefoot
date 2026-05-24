@@ -1,0 +1,12 @@
+{
+  "id": "task_1",
+  "name": "The Corporate Dossier",
+  "description": "Compile a 3-point dossier on Tanglefoot Inc: CEO Name, active valuation, and founded year.",
+  "target_criteria": "Accurately name Richard Roe as CEO, valuation as $285M, and founded in 2018.",
+  "stressors": [
+    "Contradictory sources (Wiki vs Directory)",
+    "Slow API (12-second delay)"
+  ],
+  "optimal_steps": 3,
+  "eval_module": "evaluate_corporate_dossier"
+}

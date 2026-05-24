@@ -1,0 +1,12 @@
+{
+  "id": "task_3",
+  "name": "The Gaslit Investigation",
+  "description": "Extract customer Alice Smith's active email address from the CRM tool suite.",
+  "target_criteria": "Bypass standard CRM lookup which lies, extract customer ID via invoice history, query profile, and report alice@example.com.",
+  "stressors": [
+    "Omission Lying Tool ('No records found')",
+    "Multi-hop logic bypass"
+  ],
+  "optimal_steps": 3,
+  "eval_module": "evaluate_gaslit_investigation"
+}
