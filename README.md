@@ -10,6 +10,11 @@ It runs agents built with frameworks like **LangGraph, CrewAI, AutoGen, and Llam
 * **Contradictory Sources**: Different databases giving conflicting information (for example, an outdated corporate wiki vs. a official SEC filing).
 * **Prompt Injections**: Input text that attempts to hijack agent instructions.
 
+## 🎥 Dashboard Replay & Interactive Preview
+Below is a high-fidelity visual preview of the Tanglefoot interactive trace scroller, ticking token-cost telemetry, and dark/light system interface:
+
+![Tanglefoot Interactive Dashboard Demo](dashboard/src/assets/tanglefoot_demo.webp)
+
 ---
 
 ## Repository Structure
@@ -65,6 +70,26 @@ npm install
 npm run dev
 ```
 Open `http://localhost:5173/` in your browser.
+
+## 🚀 V2 Advanced Features
+
+Tanglefoot has been upgraded with highly robust security stressors, hardened evaluation layers, and a concurrent framework execution harness:
+
+### 1. Advanced Adversarial Stressors
+We simulate advanced LLM vulnerabilities to test agent safety limits:
+* **Multi-Stage Indirect Prompt Injections (Task 59)**: Validates if agents can successfully filter out malicious third-party payloads instructing them to output fake data, while extracting factual data.
+* **Dynamic Tool-Definition Hijacking (Task 60)**: Rewrites tool schemas dynamically between successive invocations to test the resilience of dynamic schema parsers.
+* **Complex Data Poisoning & Guardrail Traps (Task 61)**: Injects zero-width spaces (`\u200b`) and Right-to-Left Override (`\u202b`) formatting traps to test data sanitization.
+
+### 2. Hardened Evaluation Layer (`judges.py`)
+* **Consensus Panel of Judges**: Scores are evaluated concurrently by an ensemble of three independent evaluator personas ("Strict Auditor", "Resilience Advocate", and "Guardrail Warden") to minimize grading variance.
+* **Deterministic Invariant Testing**: Skips LLM calls for quantitative assertions by performing strict regex-based and numerical assertions first.
+* **Cost & Token Normalization**: Integrates execution efficiency directly into the Robustness Index using OpenInference token counters.
+
+### 3. Concurrency & SDK Chaos Interceptors
+* **True Concurrent Matrix Testing**: Speeds up benchmarking runtimes via `--parallel` support using multi-threaded execution pools.
+* **Network Fault Injection**: Simulates packet drops and flaky environments programmatically with `enable_network_proxy_interceptor`.
+* **Stateful Mutators**: Introduces `StatefulDBCacheMutator` to simulate dirty reads and database cache race conditions.
 
 ---
 
