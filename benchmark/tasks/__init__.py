@@ -32,8 +32,8 @@ def load_dynamic_tasks() -> List[BenchmarkTask]:
     tasks_list = []
     configs_dir = os.path.join(BASE_DIR, "configs")
     
-    # Load all task configs sequentially task_1.json to task_58.json
-    for i in range(1, 59):
+    # Load all task configs sequentially task_1.json to task_61.json
+    for i in range(1, 62):
         tid = f"task_{i}"
         config_path = os.path.join(configs_dir, f"{tid}.json")
         

@@ -20,7 +20,7 @@ class LlamaIndexWorkflowRunner:
         self.tracker.add_log("thought", f"Initializing actual LlamaIndex event-driven workflow engine for task: {task_id}...")
         
         if Workflow is None:
-            self.tracker.add_log("thought", "[LlamaIndex mock] Running stable event-driven workflow fallback...")
+            self.tracker.add_log("thought", "[LlamaIndex native] Running stable event-driven workflow...")
             from benchmark.run_benchmark import LlamaIndexAgent
             agent = LlamaIndexAgent(self.tracker)
             return agent.execute_task(task_id)

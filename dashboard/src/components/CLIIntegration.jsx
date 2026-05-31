@@ -21,7 +21,7 @@ pip install fastapi uvicorn requests pydantic openai`
     {
       title: 'Launch the Adversarial Tools Server',
       icon: Terminal,
-      description: 'Start the mock REST API server containing the lying, slow, broken, and circular redirection endpoints. The server runs locally on port 8000.',
+      description: 'Start the adversarial REST API server containing the lying, slow, broken, and circular redirection endpoints. The server runs locally on port 8005.',
       code: `# Boot the tools server in the background
 uvicorn benchmark.tools.adversarial_api:app --reload --port 8000
 

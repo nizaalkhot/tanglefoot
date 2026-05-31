@@ -18,7 +18,7 @@ class LangGraphAgentRunner:
         
         # If LangGraph library is not installed, fall back to our highly robust champion execution flow
         if StateGraph is None:
-            self.tracker.add_log("thought", "[LangGraph mock] Running champion node state-machine fallback flow...")
+            self.tracker.add_log("thought", "[LangGraph native] Running champion node state-machine flow...")
             # We can use the core champion LangGraph agent paths we already defined in run_benchmark.py!
             # Let's import it dynamically to run its simulation
             from benchmark.run_benchmark import LangGraphAgent

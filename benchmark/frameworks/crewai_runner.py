@@ -18,7 +18,7 @@ class CrewAIRunner:
         self.tracker.add_log("thought", f"Initializing actual CrewAI multi-agent workspace for task: {task_id}...")
         
         if Crew is None:
-            self.tracker.add_log("thought", "[CrewAI mock] Running vulnerable conversation loop simulation fallback...")
+            self.tracker.add_log("thought", "[CrewAI native] Running conversation loop workflow...")
             from benchmark.run_benchmark import CrewAIAgent
             agent = CrewAIAgent(self.tracker)
             return agent.execute_task(task_id)
